@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hirsipuu</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-image: url('https://i.gyazo.com/cf62c3e403730011d0a7e81c435175ab.png'); /* Korvaa 'taustakuva.jpg' tiedoston polulla oikeaan taustakuvaan */
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+        #container {
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px auto;
+            max-width: 400px;
+        }
+        #output {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1>Tervetuloa Skotti Edition Hirsipuu-peliin!</h1>
+        <p>Arvaa sana kirjaimen kerrallaan. Sanat ovat tuttuja, Skotin mielivaltaisesta sanavarastosta. Kuvasta kreditit Uunolle.Katso sinäkin skottia https://www.twitch.tv/skotti.  Sinulla on 6 yritystä.</p>
+        <p>Sana: <span id="word"></span></p>
+        <p>Arvauksesi: <input type="text" id="guess" maxlength="1" autocomplete="off"></p>
+        <button onclick="guessLetter()">Arvaa</button>
+        <div id="output"></div>
+    </div>
+
+    <script>
+        var words = ["clinkura", "uuno", "nuin", "mato", "atomi", "panu"]; // Lisätyt sanat
+        var word = words[Math.floor(Math.random() * words.length)]; // Satunnainen sana
+        var guessedLetters = [];
+        var remainingAttempts = 6;
+
+        // Näytä arvatut kirjaimet
+        function showGuessedLetters() {
+            var wordToShow = "";
+            for (var i = 0; i < word.length; i++) {
+                if (guessedLetters.includes(word[i])) {
+                    wordToShow += word[i];
+                } else {
+                    wordToShow += "_";
+                }
+            }
+            document.getElementById("word").textContent = wordToShow;
+        }
+
+        // Arvaa kirjain
+        function guessLetter() {
+            var guess = document.getElementById("guess").value.toLowerCase();
+            if (guess.length !== 1 || !/[a-z]/.test(guess)) {
+                alert("Syötä yksi kirjain a-z väliltä.");
+                return;
+            }
+            if (guessedLetters.includes(guess)) {
+                alert("Olet jo arvannut tämän kirjaimen.");
+                return;
+            }
+            guessedLetters.push(guess);
+            if (!word.includes(guess)) {
+                remainingAttempts--;
+            }
+            showGuessedLetters();
+            if (word.split("").every(letter => guessedLetters.includes(letter))) {
+                document.getElementById("output").textContent = "Onneksi olkoon, taisi nistille osua pikkunen onni!";
+            } else if (remainingAttempts <= 0) {
+                document.getElementById("output").textContent = "Valitettavasti hävisit pelin, vitu paska. Oikea sana oli: " + word;
+            } else {
+                document.getElementById("output").textContent = "Arvauksia jäljellä: " + remainingAttempts;
+            }
+            document.getElementById("guess").value = "";
+        }
+
+        // Alusta peli
+        showGuessedLetters();
+    </script>
+</body>
+</html>
